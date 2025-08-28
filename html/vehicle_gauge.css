@@ -1,0 +1,76 @@
+:root{
+  --face:#e9d9c1;           /* cream */
+  --num:#c61f1f;            /* red numerals */
+  --needle:#c61f1f;         /* red needle */
+  --hub:#444;               /* matte hub */
+  --bezel:#2a2a2a;          /* matte bezel */
+  --tick:#5a2424;           /* tick color */
+  --text:#2b1a1a;
+}
+
+#gaugeRoot{
+  position:absolute;
+  right:3%;
+  bottom:5%;
+  width:520px;              /* overridden by JS from config */
+  height:auto;
+  pointer-events:none;
+  display:none;
+  filter: drop-shadow(0 4px 18px rgba(0,0,0,.65));
+}
+
+.gauge-wrap{
+  position:relative;
+  width:100%;
+  height:auto;
+}
+
+.gauge-svg{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+/* odometer window */
+.g-odo{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:18%;
+  font-family:"Courier New",monospace;
+  font-weight:700;
+  color:#1b1b1b;
+  background:#e8e1d2;
+  border:2px solid #3b2a24;
+  border-radius:4px;
+  padding:2px 8px;
+  letter-spacing:2px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 2px rgba(0,0,0,.2);
+}
+
+/* gear pill */
+.g-gear{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:8%;
+  font-family:"Courier New",monospace;
+  font-weight:700;
+  color:#fce5e5;
+  background:rgba(0,0,0,.55);
+  border:1px solid #5a2a2a;
+  border-radius:12px;
+  padding:2px 10px;
+}
+
+/* mini arcs text (fuel/rpm) */
+.g-mini-label{
+  position:absolute;
+  font-family:"Courier New",monospace;
+  font-size:12px;
+  color:#f7d6d6;
+  text-shadow:0 1px 1px rgba(0,0,0,.8);
+}
+
+.g-mini-label.fuel{ left:12%; bottom:31%; }
+.g-mini-label.rpm{ right:12%; bottom:31%; }

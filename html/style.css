@@ -1,0 +1,77 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: none;
+    overflow: hidden;
+    --vignette-alpha: 0; /* driven by JS (0..1) */
+}
+
+/* Low-health & damage overlay */
+#damage-vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: var(--vignette-alpha);
+    transition: opacity 140ms linear;
+    background:
+        radial-gradient(55% 55% at 50% 45%, rgba(100,0,0,0) 0%, rgba(100,0,0,0) 45%, rgba(120,0,0,0.25) 65%, rgba(150,0,0,0.45) 85%, rgba(180,0,0,0.6) 100%),
+        rgba(140, 0, 0, 0.0);
+    mix-blend-mode: multiply;
+}
+
+/* Heartbeat pulse: subtle surge on each beat */
+.low-health #damage-vignette { animation: heartbeatPulse 550ms ease-out var(--heartbeat-iteration, 0) 1; }
+@keyframes heartbeatPulse {
+    0%   { filter: brightness(1); }
+    15%  { filter: brightness(1.15); }
+    30%  { filter: brightness(1); }
+    45%  { filter: brightness(1.08); }
+    100% { filter: brightness(1); }
+}
+
+/* One-shot damage flash (short, stronger than heartbeat) */
+.damage-flash { animation: damageFlash 280ms ease-out 1; }
+@keyframes damageFlash {
+    0%   { filter: brightness(1.25) saturate(1.2); }
+    100% { filter: brightness(1)    saturate(1.0); }
+}
+
+/* Compass / street bar */
+#compass {
+    position: absolute;
+    top: 2%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(20, 20, 20, 0.7);
+    padding: 8px 18px;
+    border: 2px solid #660000;
+    border-radius: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 18px;
+    color: #b70000;
+    text-shadow: 1px 1px 2px black;
+}
+
+/* HUD Layout */
+#hud {
+    position: absolute;
+    bottom: 5%;
+    left: 325px; /* next to minimap */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Horizontal row of icons */
+.hud-icons-row { display: flex; flex-direction: row; gap: 10px; }
+
+/* Each HUD icon and bar */
+.hud-item-row { position: relative; width: 40px; height: 40px; }
+.hud-item-row img { width: 100%; height: 100%; filter: grayscale(100%) contrast(120%); position: relative; z-index: 1; }
+.hud-fill-row { position: absolute; bottom: 0; left: 0; height: 100%; width: 0%; background-color: rgba(183, 0, 0, 0.45); z-index: 2; transition: width 0.3s ease-in-out; }
+
+/* XP Block */
+.xp-block { margin-top: 10px; width: 230px; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #fff; text-shadow: 1px 1px 2px black; }
+#job-label { background-color: rgba(0, 0, 0, 0.4); padding: 2px 6px; border-radius: 3px; margin-bottom: 4px; font-size: 12px; color: #ffcccc; text-align: left; white-space: nowrap; }
+.xp-bar-bg { width: 100%; height: 10px; background-color: rgba(60, 0, 0, 0.6); border: 1px solid #660000; position: relative; border-radius: 3px; }
+.xp-bar-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background-color: #c40000; border-radius: 3px; transition: width 0.3s ease-in-out; }

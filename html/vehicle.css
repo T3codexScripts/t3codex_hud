@@ -1,0 +1,187 @@
+/* === Apocalypse-styled Vehicle HUD ===
+   - Dark, rusty panel with scanlines + vignette
+   - Color-coded bars: OK (muted green), WARN (amber), CRIT (red)
+   - Pulsing for CRIT, subtle glow for WARN/CRIT
+*/
+
+:root {
+    --rust-red: #5e1a1a;
+    --blood: #7f0c0c;
+    --blood-bright: #c40000;
+    --amber: #d0a100;
+    --amber-bright: #ffcc00;
+    --ok: #3b7a3d;
+    --ok-bright: #5fa962;
+    --text-dim: #ffcccc;
+    --text-bright: #ffe7e7;
+    --panel-bg-a: rgba(12, 12, 12, 0.9);
+    --panel-bg-b: rgba(25, 20, 20, 0.85);
+    --grid: rgba(255, 0, 0, 0.06);
+    --shadow: 0 0 12px rgba(0,0,0,0.85), inset 0 0 18px rgba(0,0,0,0.65);
+}
+
+/* Container */
+#vehHud {
+    position: absolute;
+    bottom: 5%;
+    right: 3%;
+
+    min-width: 240px;
+    padding: 12px 14px;
+
+    font-family: "Courier New", Courier, monospace;
+    color: var(--text-dim);
+    letter-spacing: 0.6px;
+
+    background:
+        /* subtle grid */
+        linear-gradient(0deg, transparent 24%, var(--grid) 25%, var(--grid) 26%, transparent 27%, transparent 74%, var(--grid) 75%, var(--grid) 76%, transparent 77%),
+        linear-gradient(90deg, transparent 24%, var(--grid) 25%, var(--grid) 26%, transparent 27%, transparent 74%, var(--grid) 75%, var(--grid) 76%, transparent 77%),
+        /* panel gradient */
+        linear-gradient(180deg, var(--panel-bg-a) 0%, var(--panel-bg-b) 100%);
+    background-size: 24px 24px, 24px 24px, 100% 100%;
+
+    border: 2px solid var(--rust-red);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+
+    /* old CRT scanlines + vignette */
+    overflow: hidden;
+    display: none; /* toggled by JS */
+    z-index: 1000;
+}
+
+/* Vignette */
+#vehHud::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.5) 100%);
+}
+
+/* Scanlines */
+#vehHud::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.04) 0px,
+        rgba(255,255,255,0.04) 1px,
+        rgba(0,0,0,0.03) 2px,
+        rgba(0,0,0,0.03) 3px
+    );
+    mix-blend-mode: overlay;
+    opacity: 0.6;
+}
+
+/* Rows */
+.veh-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 6px 0;
+}
+
+/* Labels & values */
+.veh-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-shadow: 1px 1px 2px black;
+}
+
+.veh-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-bright);
+    text-shadow: 0 0 6px rgba(255, 200, 200, 0.25), 1px 1px 2px black;
+}
+
+/* Bars */
+.veh-bar {
+    position: relative;
+    width: 100%;
+    height: 12px;
+
+    background: rgba(30, 10, 10, 0.7);
+    border: 1px solid var(--rust-red);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.7);
+}
+
+.veh-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0%;
+
+    background: var(--ok);
+    filter: saturate(110%) contrast(105%);
+    transition: width 0.18s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* State colors + effects */
+.veh-fill.ok {
+    background: linear-gradient(180deg, var(--ok-bright), var(--ok));
+    box-shadow: 0 0 8px rgba(95, 169, 98, 0.2);
+}
+
+.veh-fill.warn {
+    background: linear-gradient(180deg, var(--amber-bright), var(--amber));
+    box-shadow: 0 0 10px rgba(255, 204, 0, 0.25);
+    animation: barWarnGlow 1.6s ease-in-out infinite;
+}
+
+.veh-fill.crit {
+    background: linear-gradient(180deg, #ff4d4d, var(--blood-bright));
+    box-shadow: 0 0 12px rgba(196, 0, 0, 0.35);
+    animation: barCritPulse 0.9s ease-in-out infinite;
+}
+
+/* Gear pill */
+#vehGear {
+    background: rgba(0,0,0,0.45);
+    border: 1px solid var(--rust-red);
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 12px;
+    color: var(--text-bright);
+    text-shadow: 1px 1px 2px black;
+}
+
+/* Animations */
+@keyframes barWarnGlow {
+    0%, 100% { filter: drop-shadow(0 0 0 rgba(255, 204, 0, 0.0)); }
+    50%      { filter: drop-shadow(0 0 6px rgba(255, 204, 0, 0.5)); }
+}
+
+@keyframes barCritPulse {
+    0%, 100% { transform: translateX(0); filter: drop-shadow(0 0 0 rgba(196, 0, 0, 0)); }
+    50%      { transform: translateX(0.5px); filter: drop-shadow(0 0 7px rgba(196, 0, 0, 0.55)); }
+}
+
+/* Optional shaky header vibe on critical overall state */
+#vehHud.crit-shake {
+    animation: hudShake 0.22s linear 0s 1;
+}
+@keyframes hudShake {
+    0%   { transform: translate(0, 0); }
+    25%  { transform: translate(1px, -0.5px); }
+    50%  { transform: translate(-0.5px, 0.5px); }
+    75%  { transform: translate(0.75px, -0.25px); }
+    100% { transform: translate(0,0); }
+}
+
+/* Tiny header if you want to add one later (kept for future) */
+#vehHeader {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #ffaaaa;
+    margin-bottom: 4px;
+    opacity: 0.85;
+}

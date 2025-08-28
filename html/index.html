@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Zombie HUD</title>
+
+    <!-- Base HUD styles -->
+    <link rel="stylesheet" href="style.css" />
+    <!-- Vehicle bar-HUD styles -->
+    <link rel="stylesheet" href="vehicle.css" />
+    <!-- Retro half-moon gauge styles (NEW) -->
+    <link rel="stylesheet" href="vehicle_gauge.css" />
+
+    <script>console.log('[t3codex_hud] NUI index.html loaded');</script>
+</head>
+<body>
+    <!-- Low-health & damage red vignette overlay -->
+    <div id="damage-vignette"></div>
+
+    <!-- Compass -->
+    <div id="compass">
+        <span id="direction">N</span> — <span id="street">Unknown Road</span>
+    </div>
+
+    <!-- Base HUD (health/hunger/thirst/oxygen/armor/xp) -->
+    <div id="hud">
+        <div class="hud-icons-row">
+            <div class="hud-item-row"><img src="images/health.png"><div class="hud-fill-row" id="health-fill"></div></div>
+            <div class="hud-item-row"><img src="images/hunger.png"><div class="hud-fill-row" id="hunger-fill"></div></div>
+            <div class="hud-item-row"><img src="images/thirst.png"><div class="hud-fill-row" id="thirst-fill"></div></div>
+            <div class="hud-item-row"><img src="images/lungs.png"><div class="hud-fill-row" id="oxygen-fill"></div></div>
+            <div class="hud-item-row"><img src="images/armor.png"><div class="hud-fill-row" id="armor-fill"></div></div>
+        </div>
+
+        <div class="xp-block">
+            <div id="job-label">Job: Unknown</div>
+            <div class="xp-bar-bg">
+                <div class="xp-bar-fill" id="xp-bar-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Base HUD logic -->
+    <script src="script.js"></script>
+
+    <!-- Vehicle bar-HUD (still available) -->
+    <script src="vehicle.js"></script>
+
+    <!-- Retro half-moon gauge (NEW) -->
+    <script src="vehicle_gauge.js"></script>
+</body>
+</html>
